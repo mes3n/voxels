@@ -32,4 +32,4 @@ all: clean main
 .PHONY: clean
 clean:
 	rm -rf bin obj
-	mkdir bin obj
+	mkdir bin obj obj/shaders
