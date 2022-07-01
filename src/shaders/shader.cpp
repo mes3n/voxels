@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-#include <GL/glew.h>
+#include "shader.hpp"
 
 
 std::string readFile(const char* path) {
@@ -30,21 +30,41 @@ void loadShader(const char* path, GLenum type, GLuint program) {
     std::string shaderStr = readFile(path);
     const char* shaderSrc = shaderStr.c_str();
 
-    GLint result = GL_FALSE;
     int logLength;
 
     std::cout << "compiling shader " << path << std::endl;
     glShaderSource(shader,1 , &shaderSrc, NULL);
     glCompileShader(shader); 
 
-    glGetShaderiv(shader, GL_COMPILE_STATUS, &result);
     glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &logLength);
-    std::vector<GLchar> shaderError((logLength > 1) ? logLength : 1);
+    std::vector<GLchar> shaderError(logLength > 1 ? logLength : 1);
     glGetShaderInfoLog(shader, logLength, NULL, &shaderError[0]);
-    std::cout << &shaderError[0] << std::endl;
+    if (shaderError.size() > 1) std::cout << &shaderError[0] << std::endl;
 
     glAttachShader(program, shader);
 
     glDeleteShader(shader);
 
 }
+
+Shader::Shader(const char* vertPath, const char* fragPath) {
+    ID = glCreateProgram();
+    loadShader(vertPath, GL_VERTEX_SHADER, ID);
+    loadShader(fragPath, GL_FRAGMENT_SHADER, ID);
+    glLinkProgram(ID);
+}
+
+void Shader::use (void) {glUseProgram(ID);}
+
+void Shader::setBool(const std::string &name, bool value) const
+{         
+    glUniform1i(glGetUniformLocation(ID, name.c_str()), (int)value); 
+}
+void Shader::setInt(const std::string &name, int value) const
+{ 
+    glUniform1i(glGetUniformLocation(ID, name.c_str()), value); 
+}
+void Shader::setFloat(const std::string &name, float value) const
+{ 
+    glUniform1f(glGetUniformLocation(ID, name.c_str()), value); 
+} 
