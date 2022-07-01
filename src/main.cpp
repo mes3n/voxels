@@ -18,7 +18,7 @@ void render(sf::Window* window) {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 
-    glDrawArrays(GL_TRIANGLES, 0, 9);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
 
 
     window->display();
@@ -27,9 +27,9 @@ void render(sf::Window* window) {
 
 void triangle(sf::Vector3f center, GLuint vbo) {
     GLfloat vertices[] = {
-        center.x - 0.5f, center.y - 0.5f, center.z + 0.0f,
-        center.x + 0.5f, center.y - 0.5f, center.z + 0.0f,
-        center.x + 0.0f, center.y + 0.5f, center.z + 0.0f
+        center.x - 0.5f, center.y - 0.5f, center.z + 0.0f,  1.0f, 0.0f, 0.0f,  // bottom left, red
+        center.x + 0.5f, center.y - 0.5f, center.z + 0.0f,  0.0f, 1.0f, 0.0f,  // bottom right, green
+        center.x + 0.0f, center.y + 0.5f, center.z + 0.0f,  0.0f, 0.0f, 1.0f   // top, blue
     };
     
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
@@ -37,25 +37,26 @@ void triangle(sf::Vector3f center, GLuint vbo) {
 
 int main (int argc, char** argv) {
 
+    // create window and initialize glew
     sf::Window window(sf::VideoMode(900, 900), "OpenGL", sf::Style::Default);
+    window.setActive(true);
     glewInit();
 
-    GLuint shaderProgram = glCreateProgram();
-    loadShader("shaders/basic.vert", GL_VERTEX_SHADER, shaderProgram);
-    loadShader("shaders/basic.frag", GL_FRAGMENT_SHADER, shaderProgram);
-    glLinkProgram(shaderProgram);
-    
-    window.setActive(true);
+    // compile and link shaders
+    Shader shader("shaders/basic.vert", "shaders/basic.frag");
+    shader.use();
 
+    // create triangle
     GLuint vbo;
     glGenBuffers(1, &vbo);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
     triangle(sf::Vector3f(0.f, 0.f, 0.f), vbo);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3*sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6*sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6*sizeof(float), (void*)(3*sizeof(float)));
+    glEnableVertexAttribArray(1);
 
-    glUseProgram(shaderProgram);
-
+    // mainloop
     bool running = true;
     while (running) {
 
