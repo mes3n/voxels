@@ -1,6 +1,7 @@
 # directories
-obj/*
-bin/*
+obj/
+bin/
+.vscode/
 
 # Prerequisites
 *.d
