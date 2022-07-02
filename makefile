@@ -22,6 +22,9 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
 
 all: clean main
 
+run: main
+	@echo ""
+	$(MYDIR)/bin/main
 
 # header: spec_file main
 #
@@ -32,4 +35,4 @@ all: clean main
 .PHONY: clean
 clean:
 	rm -rf bin obj
-	mkdir bin obj obj/shaders
+	mkdir bin obj
