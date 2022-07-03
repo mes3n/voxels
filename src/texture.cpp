@@ -20,7 +20,7 @@ GLuint loadFromImage (sf::Image image, GLenum type) {
     glTexParameteri(type, GL_TEXTURE_WRAP_S, GL_REPEAT);	
     glTexParameteri(type, GL_TEXTURE_WRAP_T, GL_REPEAT);
     glTexParameteri(type, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-    glTexParameteri(type, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(type, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
     glTexImage2D(type, 0, GL_RGBA, image.getSize().x, image.getSize().y, 0, GL_RGBA, GL_UNSIGNED_BYTE, image.getPixelsPtr());
     glGenerateMipmap(type);
