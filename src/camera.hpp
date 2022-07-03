@@ -14,7 +14,7 @@ class Camera {
         glm::vec3 right;
         glm::vec3 up;
 
-        // glm::vec3 forwards;
+        glm::vec3 forwards;
         glm::vec3 worldUp;
         float sensitivity;
         float speed;
@@ -29,7 +29,7 @@ class Camera {
     public:
         Camera (glm::vec3 start);
 
-        void setFacing (int dx, int dy);
+        void setFacing (int dx, int dy, float dt);
 
         void moveForwards (float dt);
         void moveBackwards (float dt);

@@ -8,14 +8,13 @@ Camera::Camera (glm::vec3 start) {
     position = start;
 
     worldUp = glm::vec3(0.0f, 1.0f, 0.0f);
-    sensitivity = 0.1f;
-    speed = 0.05f;
+    sensitivity = 1.3f;
+    speed = 4.0f;
 
     yaw = 0.0f;
-    pitch = 80.0f;
+    pitch = 0.0f;
 
-    setFacing(0, 0);
-
+    setFacing(0, 0, 0.0f);
 }
 
 glm::vec3 Camera::target (void) const {
@@ -28,35 +27,42 @@ glm::vec3 Camera::setUp (void) const {
     return glm::normalize(glm::cross(right, facing));
 }
 
-void Camera::setFacing (int dx, int dy) {
+void Camera::setFacing (int dx, int dy, float dt) {
 
-    yaw   -= dx * sensitivity;
-    pitch += dy * sensitivity;
+    yaw   -= dx * sensitivity * dt;
+    pitch += dy * sensitivity * dt;
 
     if (pitch > 89.0f)
         pitch = 89.0f;
     if (pitch < -89.0f)
         pitch = -89.0f;
     
-    std::cout << yaw << pitch << std::endl;
+    // glm::vec3 direction(
+    //     cos(glm::radians(yaw)) * cos(glm::radians(pitch)),
+    //     sin(glm::radians(pitch)),
+    //     sin(glm::radians(yaw)) * cos(glm::radians(pitch))
+    // );
 
-    glm::vec3 direction;
-    direction.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-    direction.y = sin(glm::radians(pitch));
-    direction.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
-
-    facing = glm::normalize(direction);
+    facing = glm::normalize(glm::vec3(
+        cos(glm::radians(yaw)) * cos(glm::radians(pitch)),
+        sin(glm::radians(pitch)),
+        sin(glm::radians(yaw)) * cos(glm::radians(pitch))
+    ));
     right = setRight();
     up = setUp();
 
-    // forwards = glm::normalize(direction - direction.y);
+    forwards = glm::vec3(
+        cos(glm::radians(yaw)),
+        0.0f,
+        sin(glm::radians(yaw))
+    );
 }
 
 void Camera::moveForwards (float dt) {
-    position += facing*speed*dt;
+    position += forwards*speed*dt;
 }
 void Camera::moveBackwards (float dt) {
-    position -= facing*speed*dt;
+    position -= forwards*speed*dt;
 }
 void Camera::moveRight (float dt) {
     position += right*speed*dt;
