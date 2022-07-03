@@ -8,14 +8,14 @@ Camera::Camera (glm::vec3 start) {
     position = start;
 
     worldUp = glm::vec3(0.0f, 1.0f, 0.0f);
+    sensitivity = 0.1f;
     speed = 0.05f;
 
-    facing = glm::vec3(0.0f, 0.0f, 1.0f);
-    right = setRight();
-    up = setUp();
+    yaw = 0.0f;
+    pitch = 80.0f;
 
-    yaw = -90.0f;
-    pitch = 0.0f;
+    setFacing(0, 0);
+
 }
 
 glm::vec3 Camera::target (void) const {
@@ -29,7 +29,6 @@ glm::vec3 Camera::setUp (void) const {
 }
 
 void Camera::setFacing (int dx, int dy) {
-    const float sensitivity = 0.1f;
 
     yaw   -= dx * sensitivity;
     pitch += dy * sensitivity;
@@ -38,6 +37,8 @@ void Camera::setFacing (int dx, int dy) {
         pitch = 89.0f;
     if (pitch < -89.0f)
         pitch = -89.0f;
+    
+    std::cout << yaw << pitch << std::endl;
 
     glm::vec3 direction;
     direction.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
@@ -47,6 +48,8 @@ void Camera::setFacing (int dx, int dy) {
     facing = glm::normalize(direction);
     right = setRight();
     up = setUp();
+
+    // forwards = glm::normalize(direction - direction.y);
 }
 
 void Camera::moveForwards (float dt) {
@@ -60,6 +63,12 @@ void Camera::moveRight (float dt) {
 }
 void Camera::moveLeft (float dt) {
     position -= right*speed*dt;
+}
+void Camera::moveUp (float dt) {
+    position += worldUp*speed*dt;
+}
+void Camera::moveDown (float dt) {
+    position -= worldUp*speed*dt;
 }
 
 glm::mat4 Camera::view (void) const {

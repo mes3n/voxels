@@ -14,7 +14,9 @@ class Camera {
         glm::vec3 right;
         glm::vec3 up;
 
+        // glm::vec3 forwards;
         glm::vec3 worldUp;
+        float sensitivity;
         float speed;
 
         glm::vec3 setRight (void) const;
@@ -33,6 +35,8 @@ class Camera {
         void moveBackwards (float dt);
         void moveRight (float dt);
         void moveLeft (float dt);
+        void moveUp (float dt);
+        void moveDown (float dt);
 
         glm::mat4 view (void) const;
 };  
