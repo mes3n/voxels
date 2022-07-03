@@ -2,6 +2,8 @@
 #include "cubeVertices.hpp"
 
 Cube::Cube () {
+    GLuint vbo;
+
     glGenVertexArrays(1, &vao);
     glGenBuffers(1, &vbo);
 
@@ -13,8 +15,14 @@ Cube::Cube () {
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 5*sizeof(GL_FLOAT), (void*)(3*sizeof(GL_FLOAT)));
     glEnableVertexAttribArray(1);
 
+    glBindVertexArray(0);
+
 }
 
 void Cube::use (void) const {
     glBindVertexArray(vao);
+}
+
+GLuint Cube::getVAO (void) const {
+    return vao;
 }

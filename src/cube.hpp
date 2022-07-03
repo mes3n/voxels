@@ -8,13 +8,13 @@
 
 class Cube {
     private:
-        GLuint vbo;
         GLuint vao;
     
     public:
         Cube ();
 
-        void use (void) const;        
+        void use (void) const;  
+        GLuint getVAO (void) const;    
 
 };
 
