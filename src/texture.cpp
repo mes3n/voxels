@@ -1,7 +1,7 @@
-#include <string>
+#include "texture.hpp"
+
 #include <iostream>
 
-#include "texture.hpp"
 
 sf::Image loadFromFile (const std::string &name) {
     sf::Image image;

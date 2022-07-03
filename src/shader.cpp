@@ -1,9 +1,8 @@
+#include "shader.hpp"
+
 #include <fstream>
-#include <string>
 #include <iostream>
 #include <vector>
-
-#include "shader.hpp"
 
 #include <glm/gtc/type_ptr.hpp>
 
