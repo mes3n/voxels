@@ -4,14 +4,12 @@ CC = g++
 MYDIR = .
 SRC_DIR = $(MYDIR)/src
 OBJ_DIR = $(MYDIR)/obj
-# FILE = # should be set from terminal  # not really useful :(
-# SRC_FILE = $(SRC_DIR)/$(FILE).cpp
-# OBJ_FILE = $(OBJ_DIR)/$(FILE).o
 CFLAGS = -Wall -g
 LDFLAGS = -Wall -g -lsfml-graphics -lsfml-window -lsfml-system -lGL -lGLEW# link these
 
 # create list of object files from source files but replace ".cpp" and "src"
-OBJ_FILES = $(patsubst $(SRC_DIR)/%.cpp, $(OBJ_DIR)/%.o, $(wildcard $(SRC_DIR)/*.cpp) $(wildcard $(SRC_DIR)/*/*.cpp))
+OBJ_SUBDIR = $(patsubst $(SRC_DIR)/%, $(OBJ_DIR)/%, $(wildcard $(SRC_DIR)/*/ $(SRC_DIR)/*/*/))# two levels of subdirectories
+OBJ_FILES = $(patsubst $(SRC_DIR)/%.cpp, $(OBJ_DIR)/%.o, $(wildcard $(SRC_DIR)/*.cpp $(SRC_DIR)/*/*.cpp $(SRC_DIR)/*/*/*.cpp))
 
 
 main: $(OBJ_FILES)
@@ -24,15 +22,31 @@ all: clean main
 
 run: main
 	@echo ""
-	$(MYDIR)/bin/main
+	exec $(MYDIR)/bin/main
 
-# header: spec_file main
-#
-# spec_file:
-# 	$(CC) $(CFLAGS) -o $(OBJ_FILE) -c $(SRC_FILE)
+
+header: HEADER_NAME = $(subst .,_,$(shell echo $(FILE) | tr '[:lower:]' '[:upper:]'))
+		CPP_FILE = $(subst .hpp,.cpp,$(FILE))
+header: 
+ifeq ("$(wildcard $(FILE))", "")
+	@touch $(FILE) 
+	@touch $(CPP_FILE)
+	@echo '#ifndef $(HEADER_NAME)' >> $(FILE)
+	@echo '#define $(HEADER_NAME)' >> $(FILE)
+	@echo '' >> $(FILE)
+	@echo '' >> $(FILE)
+	@echo '' >> $(FILE)
+	@echo '#endif  // $(HEADER_NAME)' >> $(FILE)
+
+	@echo "Created c++ header file ($(FILE)) with header guard ($(HEADER_NAME)) and source file ($(CPP_FILE))."
+		
+else
+	@echo "Header file already exists."
+
+endif
 
 
 .PHONY: clean
 clean:
 	rm -rf bin obj
-	mkdir bin obj
+	mkdir bin obj $(OBJ_SUBDIR)
