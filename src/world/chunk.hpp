@@ -3,17 +3,13 @@
 
 #ifdef unix
 #include <GL/glew.h>
-#include <glm/mat4x4.hpp>
 #endif
 
-#include "blocks/cube.hpp"
-
-#include <vector>
 
 class Chunk {
     private:
-        int amount;
-        GLuint vao;
+        int _amount;
+        GLuint _vao;
 
         // Cube cube;
         GLuint generateModelMatrices (void);
@@ -22,7 +18,7 @@ class Chunk {
         Chunk ();
         ~Chunk ();
 
-        void use (void) const;
+        void draw (void) const;
 
         int getAmount (void) const;
 

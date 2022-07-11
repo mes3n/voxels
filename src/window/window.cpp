@@ -23,18 +23,18 @@ sf::ContextSettings createContext (void) {
 
 Window::Window (int width, int height, const std::string &name) 
 : sf::RenderWindow (sf::VideoMode(width, height, 32), name, sf::Style::Close, createContext())
-, fpsText("fonts/basic-regular.ttf") {
+, _fpsText("fonts/basic-regular.ttf") {
 
 
     this->setActive(true);
-    isActive = true;
+    _isActive = true;
     this->setMouseCursorVisible(false);
-    this->setFramerateLimit(120);
+    // this->setFramerateLimit(120);
 
-    setPosition(sf::Vector2i(1681, 0));
+    this->setPosition(sf::Vector2i(1681, 1));
 
-    center = sf::Vector2i(1920*0.5, 1080*0.5);
-    sf::Mouse::setPosition(center);
+    _center = sf::Vector2i(1920*0.5, 1080*0.5);
+    sf::Mouse::setPosition(_center);
 
     glewInit();
 
@@ -46,60 +46,53 @@ Window::Window (int width, int height, const std::string &name)
     // glFrontFace(GL_CW);
 
     glViewport(0, 0, width, height);
-    projection = glm::perspective(
+    _projection = glm::perspective(
         glm::radians(45.0f), (GLfloat)width/(GLfloat)height, 0.1f, 100.f
     );
 }
 
 glm::mat4 Window::getProjection (void) const {
-    return projection;
+    return _projection;
 }
 
 sf::Vector2i Window::getMouseOffset (void) const {
-    if (this->hasFocus()) {
-        sf::Vector2i mousePos = sf::Mouse::getPosition(*this);
+    sf::Vector2i mousePos = sf::Mouse::getPosition(*this);
 
-        sf::Mouse::setPosition(center, *this);
-        return sf::Vector2i(center.x - mousePos.x, center.y - mousePos.y);
-
-    }
-    else {
-        return sf::Vector2i(0, 0);
-    }
+    sf::Mouse::setPosition(_center, *this);
+    return sf::Vector2i(_center.x - mousePos.x, _center.y - mousePos.y);
 }
 
 void Window::windowClear (void) {
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);  // some fancy color
+    glClearColor(0.1f, 0.1f, 0.1f, 1.0f);  // some fancy color
     glClearDepth(1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 }
 
 void Window::windowDisplay (void) {
-    // glDisableVertexAttribArray(0);
-    // glDisableVertexAttribArray(1);
-    // glDisableVertexAttribArray(2);
-    // glBindVertexArray(0);
+
     // this->pushGLStates();
     // this->draw(fpsText.getText());
     // this->popGLStates();
+
     this->display();
 
 }
 
 void Window::handleEvents (Camera* player) {
-    float dt = clock.dt();
+    float dt = _clock.dt();
     
     sf::Event event;
     while (this->pollEvent(event)) {
         switch (event.type) {
             case sf::Event::Closed:
-                isActive = false;
+                _isActive = false;
                 break;
 
             case sf::Event::Resized:
                 glViewport(0, 0, event.size.width, event.size.height);
-                projection = glm::perspective(
+                _projection = glm::perspective(
                     glm::radians(45.0f), (GLfloat)event.size.width/(GLfloat)event.size.height, 0.1f, 100.f
                 );
                 break;
@@ -107,7 +100,7 @@ void Window::handleEvents (Camera* player) {
             case sf::Event::KeyPressed:
                 switch (event.key.code) {
                     case sf::Keyboard::Escape:
-                        isActive = false;
+                        _isActive = false;
                         break;
 
                     default:
@@ -148,9 +141,9 @@ void Window::handleEvents (Camera* player) {
         }
         player->move(vx, vy, vz, dt);
     }
-    fpsText.setTextFromFloat((float)1.0f/dt);
+    _fpsText.setTextFromFloat((float)1.0f/dt);
 }
 
 bool Window::active (void) const {
-    return isActive;
+    return _isActive;
 }

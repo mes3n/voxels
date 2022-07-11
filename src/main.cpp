@@ -1,13 +1,5 @@
-#include <SFML/Window/Event.hpp>
-#include <SFML/Window/Keyboard.hpp>
-#include <SFML/Window/Window.hpp>
-#include <SFML/Graphics/Image.hpp>
-#include <SFML/Window/Mouse.hpp>
-
 #ifdef unix
-#include <GL/glew.h>
-#include <glm/mat4x4.hpp>
-#include <glm/gtc/matrix_transform.hpp>
+#include <glm/vec3.hpp>
 #endif  // unix
 
 #include "graphics/shader.hpp"
@@ -16,15 +8,12 @@
 #include "window/window.hpp"
 #include "world/chunk.hpp"
 
-#include "window/clock.hpp"
 #include <iostream>
-#include <vector>
 
 void render(Window* window, Chunk chunk) {
     window->windowClear();
 
-    chunk.use();
-    glDrawArraysInstanced(GL_TRIANGLES, 0, 36, chunk.getAmount());
+    chunk.draw();
 
     window->windowDisplay();
 
@@ -48,7 +37,7 @@ int main (int argc, char** argv) {
     // load texture
     Texture texture("grass.jpg", GL_TEXTURE_2D);
 
-    // load cube
+    // load chunk
     Chunk chunk;
 
     // mainloop

@@ -15,13 +15,13 @@
 
 class Window : public sf::RenderWindow {
     private:
-        bool isActive;
-        Text fpsText;
+        bool _isActive;
+        Text _fpsText;
 
-        Clock clock;
-        glm::mat4 projection;
+        Clock _clock;
+        glm::mat4 _projection;
 
-        sf::Vector2i center;
+        sf::Vector2i _center;
         sf::Vector2i getMouseOffset (void) const;
 
     public:

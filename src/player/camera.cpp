@@ -3,8 +3,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 
-Camera::Camera (glm::vec3 start) {
-    position = start;
+Camera::Camera (glm::vec3 origin) {
+    position = origin;
 
     worldUp = glm::vec3(0.0f, 1.0f, 0.0f);
     sensitivity = 1.3f;

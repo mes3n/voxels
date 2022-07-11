@@ -27,7 +27,7 @@ class Camera {
         glm::vec3 target (void) const;
         
     public:
-        Camera (glm::vec3 start);
+        Camera (glm::vec3 origin);
 
         void setFacing (int dx, int dy, float dt);
 

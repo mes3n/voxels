@@ -6,7 +6,7 @@
 
 class Clock : sf::Clock {
     private:
-        float prevTime;
+        float _prevTime;
 
     public:
         

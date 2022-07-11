@@ -49,29 +49,29 @@ void loadShader(const std::string &path, GLenum type, GLuint program) {
 }
 
 Shader::Shader(const std::string &vertPath, const std::string &fragPath) {
-    id = glCreateProgram();
-    loadShader(vertPath, GL_VERTEX_SHADER, id);
-    loadShader(fragPath, GL_FRAGMENT_SHADER, id);
-    glLinkProgram(id);
+    _id = glCreateProgram();
+    loadShader(vertPath, GL_VERTEX_SHADER, _id);
+    loadShader(fragPath, GL_FRAGMENT_SHADER, _id);
+    glLinkProgram(_id);
 }
 
 Shader::~Shader() {
-    glDeleteProgram(id);
+    glDeleteProgram(_id);
 }
 
 void Shader::use (void) const {
-    glUseProgram(id);
+    glUseProgram(_id);
 }
 
 void Shader::setBool(const std::string &name, bool value) const {         
-    glUniform1i(glGetUniformLocation(id, name.c_str()), (int)value); 
+    glUniform1i(glGetUniformLocation(_id, name.c_str()), (int)value); 
 }
 void Shader::setInt(const std::string &name, int value) const { 
-    glUniform1i(glGetUniformLocation(id, name.c_str()), value); 
+    glUniform1i(glGetUniformLocation(_id, name.c_str()), value); 
 }
 void Shader::setFloat(const std::string &name, float value) const { 
-    glUniform1f(glGetUniformLocation(id, name.c_str()), value); 
+    glUniform1f(glGetUniformLocation(_id, name.c_str()), value); 
 } 
 void Shader::setMat4(const std::string &name, glm::mat4 value) const {
-    glUniformMatrix4fv(glGetUniformLocation(id, name.c_str()), 1, GL_FALSE, glm::value_ptr(value));
+    glUniformMatrix4fv(glGetUniformLocation(_id, name.c_str()), 1, GL_FALSE, glm::value_ptr(value));
 }

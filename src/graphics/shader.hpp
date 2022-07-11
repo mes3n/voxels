@@ -10,7 +10,7 @@
 
 class Shader {
     private:
-        GLuint id;
+        GLuint _id;
         
     public: 
         Shader(const std::string &vertPath, const std::string &fragPath);
