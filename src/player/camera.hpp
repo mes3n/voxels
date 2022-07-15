@@ -9,17 +9,17 @@
 
 class Camera {
     private:
-        glm::vec3 position;
-        glm::vec3 facing;  // pitch and yaw rotation
-        glm::vec3 forwards;  // yaw rotation
-        glm::vec3 right;
-        glm::vec3 up;
+        glm::vec3 _position;
+        glm::vec3 _facing;  // pitch and yaw rotation
+        glm::vec3 _forwards;  // yaw rotation
+        glm::vec3 _right;
+        glm::vec3 _up;
         
-        glm::vec3 worldUp;
-        float sensitivity;
-        float speed;
+        const glm::vec3 _worldUp;
+        float _sensitivity;
+        float _speed;
 
-        float yaw, pitch;
+        float _yaw, _pitch;
 
         glm::vec3 setRight (void) const;
         glm::vec3 setUp (void) const;
@@ -34,8 +34,8 @@ class Camera {
         void move (float vx, float vy, float vz, float dt);
         void move (glm::vec3 v, float dt);
 
-        void setView ();
         glm::mat4 getView (void) const;
+        glm::vec3 getPosition (void) const;
 
 };  
 
