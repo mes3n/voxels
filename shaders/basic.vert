@@ -6,8 +6,8 @@ layout (location = 2) in vec3 aOffset;
 
 out vec2 textCoord;
 
-uniform mat4 view;
 uniform mat4 projection;
+uniform mat4 view;
 
 void main() {
     gl_Position = projection * view * vec4(aPos + aOffset, 1.0);
