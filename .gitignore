@@ -2,6 +2,7 @@
 obj/
 bin/
 .vscode/
+*.zip
 
 # Prerequisites
 *.d
