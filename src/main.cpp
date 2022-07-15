@@ -8,14 +8,18 @@
 #include "window/window.hpp"
 #include "world/chunk.hpp"
 
-#include <iostream>
+#include "world/skybox.hpp"
 
-void render(Window* window, Chunk chunk) {
-    window->windowClear();
+#include "print_info.hpp"
 
+
+void render(Window &window, const Chunk &chunk, const Skybox &skybox) {
+    window.windowClear();
+
+    skybox.draw();
     chunk.draw();
 
-    window->windowDisplay();
+    window.windowDisplay();
 
 }
 
@@ -32,25 +36,29 @@ int main (int argc, char** argv) {
     Camera player(glm::vec3(0.0f, 1.8f, 0.0f));
 
     // compile and link shaders
-    Shader shader("shaders/basic.vert", "shaders/basic.frag");
+    Shader basicShader("shaders/basic.vert", "shaders/basic.frag");
 
     // load texture
-    Texture texture("grass.jpg", GL_TEXTURE_2D);
+    Texture texture("assets/blocks/grass.jpg");
 
     // load chunk
-    Chunk chunk;
+    Chunk chunk(&basicShader, &texture);
+    Skybox skybox("shaders/skybox.vert", "shaders/skybox.frag", "assets/skybox/");
 
     // mainloop
     while (window.active()) {
 
         window.handleEvents(&player);
 
-        shader.setMat4("view", player.getView());
-        shader.setMat4("projection", window.getProjection());
+        basicShader.use();
+        basicShader.setMat4("view", player.getView());
+        basicShader.setMat4("projection", window.getProjection());
 
-        shader.use();
-        texture.use();
-        render(&window, chunk);
+        skybox.update(player.getView(), window.getProjection());
+
+        render(window, chunk, skybox);
+
+        print_info(player.getPosition(), window.getfps());
 
     };
 
