@@ -3,16 +3,17 @@
 
 #include <SFML/System/Clock.hpp>
 
-
 class Clock : sf::Clock {
     private:
         float _prevTime;
+        float _fps;
 
     public:
         
         Clock ();
 
-        float dt ();
+        float dt (void);
+        float getfps (void) const;
 };
 
 #endif  // CLOCK_HPP

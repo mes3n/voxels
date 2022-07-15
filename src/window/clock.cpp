@@ -1,7 +1,5 @@
 #include "clock.hpp"
 
-#include <iostream>
-
 Clock::Clock () 
 : sf::Clock::Clock() {
     
@@ -14,6 +12,12 @@ float Clock::dt (void) {
     dt = this->getElapsedTime().asSeconds() - _prevTime;
     _prevTime = this->getElapsedTime().asSeconds();
 
+    _fps = (float)1.0f/dt;
+
     return dt;
 
+}
+
+float Clock::getfps (void) const {
+    return _fps;
 }
