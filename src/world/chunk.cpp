@@ -4,12 +4,13 @@
 #include <glm/vec3.hpp>
 #endif
 
-#include "blocks/cubeVertices.hpp"
+#include "blocks/cube_vertices.hpp"
 
 #include <iostream>
 
 
-Chunk::Chunk () {
+Chunk::Chunk (const Shader* shader, const Texture* texture) 
+: _shader(shader), _texture(texture) {
 
     GLuint instanceVBO = generateModelMatrices();
 
@@ -21,7 +22,7 @@ Chunk::Chunk () {
     glBindVertexArray(_vao);
     glBindBuffer(GL_ARRAY_BUFFER, cubeVBO);
 
-    glBufferData(GL_ARRAY_BUFFER, sizeof(cubeVertices), cubeVertices, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(texturedCubeVertices), texturedCubeVertices, GL_STATIC_DRAW);
     glEnableVertexAttribArray(0);    
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5*sizeof(GLfloat), (void*)0);
     glEnableVertexAttribArray(1);    
@@ -31,13 +32,13 @@ Chunk::Chunk () {
     glEnableVertexAttribArray(2);
     glBindBuffer(GL_ARRAY_BUFFER, instanceVBO);
     glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 3*sizeof(GLfloat), (void*)0);
-    glVertexAttribDivisor(2, 1);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glVertexAttribDivisor(2, 1);
 
     glBindVertexArray(0);
-    // glDisableVertexAttribArray(0);
-    // glDisableVertexAttribArray(1);
-    // glDisableVertexAttribArray(2);
+    glDisableVertexAttribArray(0);
+    glDisableVertexAttribArray(1);
+    glDisableVertexAttribArray(2);
 
 }
 
@@ -48,12 +49,12 @@ Chunk::~Chunk () {
 
 GLuint Chunk::generateModelMatrices (void) {
     int width, height, depth;
-    width = 200;
-    height = 10;
-    depth = 200;
+    width = 16;
+    height = 16;
+    depth = 16;
 
     _amount = width*height*depth;
-    unsigned int count = 0;
+    size_t count = 0;
 
     glm::vec3* offsets = new glm::vec3[_amount];
 
@@ -82,12 +83,13 @@ GLuint Chunk::generateModelMatrices (void) {
     return vbo;
 }
 
-int Chunk::getAmount (void) const {
-    return _amount;
-}
-
 void Chunk::draw (void) const {
+    _shader->use();
+    _texture->use();
+
     glBindVertexArray(_vao);
     glDrawArraysInstanced(GL_TRIANGLES, 0, 36, _amount);
     glBindVertexArray(0);
+
+    glBindTexture(GL_TEXTURE_2D, 0);
 }

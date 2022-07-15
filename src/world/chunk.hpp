@@ -5,22 +5,25 @@
 #include <GL/glew.h>
 #endif
 
+#include "../graphics/shader.hpp"
+#include "../graphics/texture.hpp"
+
 
 class Chunk {
     private:
         int _amount;
         GLuint _vao;
 
-        // Cube cube;
+        const Shader* _shader;
+        const Texture* _texture;
+
         GLuint generateModelMatrices (void);
     
     public:
-        Chunk ();
+        Chunk (const Shader* shader, const Texture* texture);
         ~Chunk ();
 
         void draw (void) const;
-
-        int getAmount (void) const;
 
 };
 
