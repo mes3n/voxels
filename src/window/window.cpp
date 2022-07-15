@@ -22,14 +22,12 @@ sf::ContextSettings createContext (void) {
 }
 
 Window::Window (int width, int height, const std::string &name) 
-: sf::RenderWindow (sf::VideoMode(width, height, 32), name, sf::Style::Close, createContext())
-, _fpsText("fonts/basic-regular.ttf") {
-
+: sf::Window (sf::VideoMode(width, height, 32), name, sf::Style::Close, createContext()) {
 
     this->setActive(true);
     _isActive = true;
     this->setMouseCursorVisible(false);
-    // this->setFramerateLimit(120);
+    this->setFramerateLimit(120);
 
     this->setPosition(sf::Vector2i(1681, 1));
 
@@ -63,18 +61,15 @@ sf::Vector2i Window::getMouseOffset (void) const {
 }
 
 void Window::windowClear (void) {
+
+    glEnable(GL_DEPTH_TEST);
+
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);  // some fancy color
-    glClearColor(0.1f, 0.1f, 0.1f, 1.0f);  // some fancy color
-    glClearDepth(1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 }
 
 void Window::windowDisplay (void) {
-
-    // this->pushGLStates();
-    // this->draw(fpsText.getText());
-    // this->popGLStates();
 
     this->display();
 
@@ -141,7 +136,10 @@ void Window::handleEvents (Camera* player) {
         }
         player->move(vx, vy, vz, dt);
     }
-    _fpsText.setTextFromFloat((float)1.0f/dt);
+}
+
+float Window::getfps (void) const {
+    return _clock.getfps();
 }
 
 bool Window::active (void) const {

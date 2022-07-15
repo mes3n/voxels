@@ -5,7 +5,7 @@
 #include <glm/mat4x4.hpp>
 #endif  // unix
 
-#include <SFML/Graphics/RenderWindow.hpp>
+#include <SFML/Window/Window.hpp>
 
 #include <string>
 
@@ -13,10 +13,9 @@
 #include "clock.hpp"
 #include "../player/camera.hpp"
 
-class Window : public sf::RenderWindow {
+class Window : public sf::Window {
     private:
         bool _isActive;
-        Text _fpsText;
 
         Clock _clock;
         glm::mat4 _projection;
@@ -30,6 +29,8 @@ class Window : public sf::RenderWindow {
         glm::mat4 getProjection (void) const;
 
         void handleEvents (Camera* player);
+
+        float getfps (void) const;
         bool active (void) const;
 
         void windowClear (void);
