@@ -7,15 +7,13 @@
 #include <GL/glew.h>
 #endif  // unix
 
-#include <SFML/Graphics/Image.hpp>
 
 class Texture {
     private:
-        GLuint _texture;
-        GLenum _target;
+        GLuint _id;
     
     public:
-        Texture (const std::string &name, GLenum);
+        Texture (const std::string &name);
         ~Texture ();
 
         void use (void) const;
