@@ -25,8 +25,9 @@ run: main
 	exec $(MYDIR)/bin/main
 
 
-header: HEADER_NAME = $(subst .,_,$(shell echo $(FILE) | tr '[:lower:]' '[:upper:]'))
+header: HEADER_NAME = $(subst .,_,$(shell echo $(lastword $(subst /, ,$(FILE))) | tr '[:lower:]' '[:upper:]'))
 		CPP_FILE = $(subst .hpp,.cpp,$(FILE))
+
 header: 
 ifeq ("$(wildcard $(FILE))", "")
 	@touch $(FILE) 
@@ -39,7 +40,8 @@ ifeq ("$(wildcard $(FILE))", "")
 	@echo '#endif  // $(HEADER_NAME)' >> $(FILE)
 
 	@echo "Created c++ header file ($(FILE)) with header guard ($(HEADER_NAME)) and source file ($(CPP_FILE))."
-		
+	git add $(FILE) $(CPP_FILE)
+
 else
 	@echo "Header file already exists."
 
