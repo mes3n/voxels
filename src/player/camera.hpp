@@ -21,8 +21,8 @@ class Camera {
 
         float _yaw, _pitch;
 
-        glm::vec3 setRight (void) const;
-        glm::vec3 setUp (void) const;
+        void setRight (void);
+        void setUp (void);
 
         glm::vec3 target (void) const;
         

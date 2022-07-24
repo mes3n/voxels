@@ -8,10 +8,10 @@ Camera::Camera (glm::vec3 origin)
     _position = origin;
 
     _sensitivity = 1.3f;
-    _speed = 4.0f;
+    _speed = 8.0f;
 
-    _yaw = 0.0f;
-    _pitch = 0.0f;
+    _yaw = 45.0f;
+    _pitch = 45.0f;
 
     setFacing(0, 0, 0.0f);
 }
@@ -19,11 +19,11 @@ Camera::Camera (glm::vec3 origin)
 glm::vec3 Camera::target (void) const {
     return _position + _facing;
 }
-glm::vec3 Camera::setRight (void) const {
-    return glm::normalize(glm::cross(_facing, _worldUp));
+void Camera::setRight (void) {  // Change these 
+    _right = glm::normalize(glm::cross(_facing, _worldUp));
 }
-glm::vec3 Camera::setUp (void) const {
-    return glm::normalize(glm::cross(_right, _facing));
+void Camera::setUp (void) {  // - || -
+    _up = glm::normalize(glm::cross(_right, _facing));
 }
 
 void Camera::setFacing (int dx, int dy, float dt) {
@@ -41,8 +41,8 @@ void Camera::setFacing (int dx, int dy, float dt) {
         sin(glm::radians(_pitch)),
         sin(glm::radians(_yaw)) * cos(glm::radians(_pitch))
     ));
-    _right = setRight();
-    _up = setUp();
+    setRight();
+    setUp();
 
     _forwards = glm::vec3(
         cos(glm::radians(_yaw)),

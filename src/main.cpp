@@ -9,15 +9,16 @@
 #include "world/chunk.hpp"
 
 #include "world/skybox.hpp"
+#include "world/world.hpp"
 
 #include "print_info.hpp"
 
 
-void render(Window &window, const Chunk &chunk, const Skybox &skybox) {
+void render(Window &window, const Terrain &terrain, const Skybox &skybox) {
     window.windowClear();
 
     skybox.draw();
-    chunk.draw();
+    terrain.draw();
 
     window.windowDisplay();
 
@@ -42,8 +43,9 @@ int main (int argc, char** argv) {
     Texture texture("assets/blocks/grass.jpg");
 
     // load chunk
-    Chunk chunk(&basicShader, &texture);
     Skybox skybox("shaders/skybox.vert", "shaders/skybox.frag", "assets/skybox/");
+    Chunks chunks;
+    Terrain terrain(&basicShader, &texture, chunks.getPositions());
 
     // mainloop
     while (window.active()) {
@@ -56,7 +58,7 @@ int main (int argc, char** argv) {
 
         skybox.update(player.getView(), window.getProjection());
 
-        render(window, chunk, skybox);
+        render(window, terrain, skybox);
 
         print_info(player.getPosition(), window.getfps());
 

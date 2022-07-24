@@ -39,9 +39,11 @@ Window::Window (int width, int height, const std::string &name)
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
 
-    // glEnable(GL_CULL_FACE);
-    // glCullFace(GL_FRONT);
-    // glFrontFace(GL_CW);
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
+    glFrontFace(GL_CCW);
+
+    glEnable(GL_MULTISAMPLE);
 
     glViewport(0, 0, width, height);
     _projection = glm::perspective(

@@ -9,7 +9,6 @@
 
 #include <string>
 
-#include "text.hpp"
 #include "clock.hpp"
 #include "../player/camera.hpp"
 
