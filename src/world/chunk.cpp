@@ -1,95 +1,59 @@
 #include "chunk.hpp"
 
-#ifdef unix
-#include <glm/vec3.hpp>
-#endif
-
 #include "blocks/cube_vertices.hpp"
 
 #include <iostream>
 
+typedef long unsigned int luint;
 
-Chunk::Chunk (const Shader* shader, const Texture* texture) 
-: _shader(shader), _texture(texture) {
+static bool inside(glm::vec3 normalCube, glm::vec3 position) {
+    static const float cubeSide = 0.5f;
 
-    GLuint instanceVBO = generateModelMatrices();
+    glm::vec3 offset = position - normalCube;
 
-    GLuint cubeVBO;
-
-    glGenVertexArrays(1, &_vao);
-    glGenBuffers(1, &cubeVBO);
-
-    glBindVertexArray(_vao);
-    glBindBuffer(GL_ARRAY_BUFFER, cubeVBO);
-
-    glBufferData(GL_ARRAY_BUFFER, sizeof(texturedCubeVertices), texturedCubeVertices, GL_STATIC_DRAW);
-    glEnableVertexAttribArray(0);    
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5*sizeof(GLfloat), (void*)0);
-    glEnableVertexAttribArray(1);    
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5*sizeof(GLfloat), (void*)(3*sizeof(GLfloat)));
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    
-    glEnableVertexAttribArray(2);
-    glBindBuffer(GL_ARRAY_BUFFER, instanceVBO);
-    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 3*sizeof(GLfloat), (void*)0);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glVertexAttribDivisor(2, 1);
-
-    glBindVertexArray(0);
-    glDisableVertexAttribArray(0);
-    glDisableVertexAttribArray(1);
-    glDisableVertexAttribArray(2);
-
+    if (!(-cubeSide < offset.x && offset.x < cubeSide))
+        return false;
+    if (!(-cubeSide < offset.y && offset.y < cubeSide))
+        return false;
+    if (!(-cubeSide < offset.z && offset.z < cubeSide))
+        return false;
+    return true;
 }
 
-Chunk::~Chunk () {
-    glDeleteVertexArrays(1, &_vao);
-}
+Chunks::Chunks () 
+: _allPositions(256, std::vector<std::vector<int>> (16, std::vector<int> (16, 0))) { 
 
-
-GLuint Chunk::generateModelMatrices (void) {
-    int width, height, depth;
-    width = 16;
-    height = 16;
-    depth = 16;
-
-    _amount = width*height*depth;
-    size_t count = 0;
-
-    glm::vec3* offsets = new glm::vec3[_amount];
-
-    for (int x = (int)-width/2; x < (int)width/2; x++) {
-        for (int y = 1-height; y < 1; y++) {
-            for (int z = (int)-depth/2; z < (int)depth/2; z++) {
-
-                glm::vec3 offset = glm::vec3(
-                    1.0f * x, 1.0f * y, 1.0f * z
-                );
-
-                offsets[count++] = offset;
-
+    for (luint y = 0; y < 16; y++) {
+        for (luint x = 0; x < 16; x++) {
+            for (luint z = 0; z < 16; z++) {
+                _allPositions[y][x][z] = 1;
             }
         }
     }
-
-    GLuint vbo;
-    glGenBuffers(1, &vbo);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    glBufferData(GL_ARRAY_BUFFER, _amount * sizeof(glm::vec3), offsets, GL_STATIC_DRAW);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-    delete[] offsets;
-
-    return vbo;
+    createMesh();
 }
 
-void Chunk::draw (void) const {
-    _shader->use();
-    _texture->use();
+void Chunks::createMesh (void) {
+    std::vector<glm::vec3> surrounding = {
+        glm::vec3(0.0f, 1.0f, 0.0f),
+        glm::vec3(0.0f, -1.0f, 0.0f),
+        glm::vec3(1.0f, 0.0f, 0.0f),
+        glm::vec3(-1.0f, 0.0f, 0.0f),
+        glm::vec3(0.0f, 0.0f, 1.0f),
+        glm::vec3(0.0f, 0.0f, -1.0f),
+    };
 
-    glBindVertexArray(_vao);
-    glDrawArraysInstanced(GL_TRIANGLES, 0, 36, _amount);
-    glBindVertexArray(0);
+    for (luint y = 0; y < _allPositions.size(); y++) {
+        for (luint x = 0; x < _allPositions[y].size(); x++) {
+            for (luint z = 0; z < _allPositions[y][x].size(); z++) {
+                if (_allPositions[y][x][z]) {                    
+                    _drawnPositions.push_back(glm::vec3(x, y, z));
+                }
+            }
+        }
+    }
+}
 
-    glBindTexture(GL_TEXTURE_2D, 0);
+std::vector<glm::vec3> Chunks::getPositions(void) const {
+    return _drawnPositions;
 }

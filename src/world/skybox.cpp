@@ -7,8 +7,6 @@
 #include <iostream>
 #include <vector>
 
-typedef unsigned int uint;
-
 
 static sf::Image loadFromFile (const std::string &name) {
     sf::Image image;
@@ -50,7 +48,7 @@ Skybox::Skybox (const std::string &vertPath, const std::string &fragPath, const 
     glGenTextures(1, &_textureID);
     glBindTexture(GL_TEXTURE_CUBE_MAP, _textureID);
 
-    for (uint i = 0; i < faces.size(); i++) {
+    for (unsigned int i = 0; i < faces.size(); i++) {
         sf::Image image = loadFromFile(faces[i]);
 
         glTexImage2D(

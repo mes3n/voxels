@@ -3,27 +3,31 @@
 
 #ifdef unix
 #include <GL/glew.h>
+#include <glm/vec3.hpp>
 #endif
 
 #include "../graphics/shader.hpp"
 #include "../graphics/texture.hpp"
 
+#include "blocks/block.hpp"
 
-class Chunk {
+#include <vector>
+
+
+class Chunks {
     private:
-        int _amount;
-        GLuint _vao;
 
-        const Shader* _shader;
-        const Texture* _texture;
+        std::vector<std::vector<std::vector<int>>> _allPositions;
 
-        GLuint generateModelMatrices (void);
+        std::vector<GLfloat> _drawnVertices;
+        std::vector<glm::vec3> _drawnPositions;
+
+        void createMesh (void);
     
     public:
-        Chunk (const Shader* shader, const Texture* texture);
-        ~Chunk ();
+        Chunks ();
 
-        void draw (void) const;
+        std::vector<glm::vec3> getPositions (void) const;
 
 };
 
