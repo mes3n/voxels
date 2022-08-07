@@ -13,21 +13,28 @@
 
 #include <vector>
 
+#define CHUNK_HEIGHT 16
+#define CHUNK_WIDTH  16
+#define CHUNK_DEPTH  16
 
-class Chunks {
+class Chunk {
     private:
+        GLuint _vao;
+        int _amount;
 
-        std::vector<std::vector<std::vector<int>>> _allPositions;
+        const Shader* _shader;
+        const Texture* _texture;
 
-        std::vector<GLfloat> _drawnVertices;
-        std::vector<glm::vec3> _drawnPositions;
+        std::vector<std::vector<std::vector<int>>> _positions;
+        std::vector<GLfloat> _vertices;
 
         void createMesh (void);
     
     public:
-        Chunks ();
+        Chunk (const Shader* shader, const Texture* texture);
+        ~Chunk ();
 
-        std::vector<glm::vec3> getPositions (void) const;
+        void draw (void) const;
 
 };
 
