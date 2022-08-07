@@ -14,11 +14,11 @@
 #include "print_info.hpp"
 
 
-void render(Window &window, const Terrain &terrain, const Skybox &skybox) {
+void render(Window &window, const Chunk& chunk, const Skybox &skybox) {
     window.windowClear();
 
     skybox.draw();
-    terrain.draw();
+    chunk.draw();
 
     window.windowDisplay();
 
@@ -44,8 +44,8 @@ int main (int argc, char** argv) {
 
     // load chunk
     Skybox skybox("shaders/skybox.vert", "shaders/skybox.frag", "assets/skybox/");
-    Chunks chunks;
-    Terrain terrain(&basicShader, &texture, chunks.getPositions());
+    Chunk chunk(&basicShader, &texture);
+    // Terrain terrain(&basicShader, &texture, chunks.getPositions());
 
     // mainloop
     while (window.active()) {
@@ -58,7 +58,7 @@ int main (int argc, char** argv) {
 
         skybox.update(player.getView(), window.getProjection());
 
-        render(window, terrain, skybox);
+        render(window, chunk, skybox);
 
         print_info(player.getPosition(), window.getfps());
 
