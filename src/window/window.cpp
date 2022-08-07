@@ -29,9 +29,9 @@ Window::Window (int width, int height, const std::string &name)
     this->setMouseCursorVisible(false);
     this->setFramerateLimit(120);
 
-    this->setPosition(sf::Vector2i(1681, 1));
+    this->setPosition(sf::Vector2i(1921, 1));
 
-    _center = sf::Vector2i(1920*0.5, 1080*0.5);
+    _center = sf::Vector2i(width*0.5, height*0.5);
     sf::Mouse::setPosition(_center);
 
     glewInit();
