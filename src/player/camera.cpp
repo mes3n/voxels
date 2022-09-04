@@ -7,8 +7,8 @@ Camera::Camera (glm::vec3 origin)
 : _worldUp(glm::vec3(0.0f, 1.0f, 0.0f)) {
     _position = origin;
 
-    _sensitivity = 1.3f;
-    _speed = 8.0f;
+    _sensitivity = 2.6f;
+    _speed = 16.0f;
 
     _yaw = 45.0f;
     _pitch = 45.0f;
